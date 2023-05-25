@@ -8,6 +8,10 @@ that are allowed for completing Assign00
 (* ****** ****** *)
 
 exception MyErrorExn
+exception MyAssertExn
+
+(* ****** ****** *)
+
 exception MyNotImplementedExn
 
 (* ****** ****** *)
