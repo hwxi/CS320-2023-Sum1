@@ -2,8 +2,8 @@
 
 ## Assign00: the 1st assignment
 
-- Out: Friday, the 23th of May at 12:00am
-- Due: Thursday, the 29th of May at 11:59pm
+- Out: Tue, the 23th of May at 12:00am
+- Due: Mon, the 29th of May at 11:59pm
 
 ### assign00.sml
 
