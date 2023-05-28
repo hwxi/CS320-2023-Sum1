@@ -17,6 +17,8 @@ in
 val () =
 if
 (myans <> 13)
+andalso
+(myans <> 21)
 then raise Error else ()
 (* ****** ****** *)
 val () = print("Assign00-01-test passed!\n")
