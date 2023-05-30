@@ -49,11 +49,23 @@ if i0 >= 0 then i0 else ~i0
 
 (* ****** ****** *)
 
+(*
 fun
 pow_int_int
 (x: int, y: int): int =
 if y <= 0
 then 1 else x * pow_int_int(x, y-1)
+*)
+fun
+pow_int_int
+(x: int, y: int): int =
+let
+  fun loop(y: int, res: int): int =
+    if y > 0
+    then loop(y-1, x * res) else res
+in
+  loop(y, 1)
+end
 
 (* ****** ****** *)
 
@@ -158,6 +170,17 @@ let
 in
   loop(xs, 0)
 end (* end of [list_length(xs)]: let *)
+
+(* ****** ****** *)
+
+fun
+list_extend
+(xs: 'a list, x0: 'a): 'a list =
+(
+case xs of
+  nil => [x0]
+| x1 :: xs => x1 :: list_extend(xs, x0)
+)
 
 (* ****** ****** *)
 
