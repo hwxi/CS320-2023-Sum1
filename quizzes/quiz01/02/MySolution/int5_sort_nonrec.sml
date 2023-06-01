@@ -55,7 +55,12 @@ int5_sort_nr(xs) for every 5-tuple xs of the type int5.
 
 val
 int2_sort_nr =
-fn(xs: int2): int2 => raise NotImplemented320
+fn(xs: int2): int2 =>
+   let
+       val (x1, x2) = xs
+   in
+       if x1 <= x2 then (x1, x2) else (x2, x1)
+   end
 
 (* ****** ****** *)
 
