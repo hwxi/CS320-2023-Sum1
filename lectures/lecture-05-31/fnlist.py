@@ -32,8 +32,8 @@ def fnlist_fromto(start, finish):
         res = fnlist_cons(finish-i-1, res)
     return res
 ########################################################################
-flist1000 = fnlist_fromto(0, 1000)
-print("|flist1000| =", fnlist_length(flist1000))
-flist1000000 = fnlist_fromto(0, 1000000)
-print("|flist1000000| =", fnlist_length(flist1000000))
+fnlist1000 = fnlist_fromto(0, 1000)
+print("|fnlist1000| =", fnlist_length(fnlist1000))
+fnlist1000000 = fnlist_fromto(0, 1000000)
+print("|fnlist1000000| =", fnlist_length(fnlist1000000))
 ########################################################################
