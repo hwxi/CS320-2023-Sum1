@@ -30,7 +30,6 @@ def fnlist_fromto(start, finish):
     res = fnlist_nil()
     for i in range(finish-start):
         res = fnlist_cons(finish-i-1, res)
-        finish -= 1
     return res
 ########################################################################
 flist1000 = fnlist_fromto(0, 1000)
