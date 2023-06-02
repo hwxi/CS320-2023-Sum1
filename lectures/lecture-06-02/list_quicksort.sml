@@ -27,7 +27,7 @@ list_partition
     else list_partition lte (p0, xs, ys, x1 :: zs)
 )
 
- val xs =
+val xs =
 [1,3,5,7,9,8,6,4,2,0]
 val ys = list_quicksort (fn(x, y) => x <= y) (xs)
 val zs = list_quicksort (fn(x, y) => x >= y) (xs)
