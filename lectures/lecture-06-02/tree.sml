@@ -20,4 +20,4 @@ fun tree_size (xs: 'a tree): int =
 fun tree_height (xs: 'a tree): int =
   case xs of
     tree_nil => 0
-  | tree_cons(tl, _, tr) => 1 + int_max(tree_size(tl), tree_size(tr))
+  | tree_cons(tl, _, tr) => 1 + int_max(tree_height(tl), tree_height(tr))
