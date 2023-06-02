@@ -8,6 +8,11 @@ that is, it is shared by the class.
 *)
 (* ****** ****** *)
 
+val int_max = Int.max
+val int_min = Int.min
+
+(* ****** ****** *)
+
 type 'a optn = 'a option
 
 (* ****** ****** *)

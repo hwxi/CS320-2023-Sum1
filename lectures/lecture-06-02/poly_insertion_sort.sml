@@ -4,7 +4,7 @@ the list being sorted.
 *)
 fun
 insertion_sort
-    (lte: 'a * 'a -> bool) (xs: 'a list): 'a list =
+    (lte: ('a * 'a) -> bool) (xs: 'a list): 'a list =
 (
   case xs of
      nil => nil
