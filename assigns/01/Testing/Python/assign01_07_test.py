@@ -1,6 +1,7 @@
 ####################################################
 import sys
 sys.path.append('./../../MySolution/Python')
+from assign01_05 import *
 from assign01_07 import *
 ####################################################
 print("[import ./../MySolution/assign01_07.py] is done!")
