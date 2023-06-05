@@ -35,4 +35,4 @@ end (* end-of-local *)
 
 (* ****** ****** *)
 
-(* end of [CS320-2023-Spring-assign01-04-test.sml] *)
+(* end of [CS320-2023-Sum1-assign01-04-test.sml] *)
