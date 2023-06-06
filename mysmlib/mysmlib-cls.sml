@@ -322,6 +322,30 @@ list_append
 
 (* ****** ****** *)
 
+fun
+list_forall
+( xs: 'a list
+, test: 'a -> bool): bool =
+(
+case xs of
+  nil => true
+| x1 :: xs =>
+  test(x1) andalso list_forall(xs, test)
+)
+
+fun
+list_exists
+( xs: 'a list
+, test: 'a -> bool): bool =
+(
+case xs of
+  nil => false
+| x1 :: xs =>
+  test(x1) orelse list_exists(xs, test)
+)
+
+(* ****** ****** *)
+
 (*
 A Swiss army's knife for left-handed
 *)
