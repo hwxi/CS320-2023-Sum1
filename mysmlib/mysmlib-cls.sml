@@ -346,6 +346,34 @@ case xs of
 
 (* ****** ****** *)
 
+fun
+list_foreach
+(xs: 'a list, work: 'a -> unit): unit =
+let
+val _ =
+list_forall
+(xs, fn(x1) => (work(x1); true)) in ()
+end
+
+(* ****** ****** *)
+
+fun
+list_forall
+(xs: 'a list, test: 'a -> bool): bool =
+let
+exception False
+in
+(
+list_foreach
+(xs,
+ fn(x1) =>
+ if test(x1)
+ then () else raise False); true)
+handle False => false
+end (* end-of-let: list_forall(xs, test) *)
+
+(* ****** ****** *)
+
 (*
 A Swiss army's knife for left-handed
 *)
@@ -430,6 +458,21 @@ list_foldr(xs, [], fn(x, r) => fopr(x) :: r)
 (* ****** ****** *)
 
 fun
+forall_to_foreach
+( forall
+: ('xs * ('x0 -> bool)) -> bool
+)
+: ('xs * ('x0 -> unit)) -> unit =
+fn(xs, work) =>
+(forall(xs, fn(x0) => (work(x0); true)); ())
+
+fun
+list_foreach(xs, work) =
+forall_to_foreach(list_forall)(xs, work)
+
+(* ****** ****** *)
+
+fun
 foreach_to_forall
 ( foreach
 : ('xs * ('x0 -> unit)) -> unit
@@ -455,6 +498,10 @@ end handle False(*void*) => (false)
 (* ****** ****** *)
 end (* end of [foreach_to_forall]: let *)
 
+fun
+list_forall(xs, test) =
+foreach_to_forall(list_foreach)(xs, test)
+
 (* ****** ****** *)
 
 fun
@@ -475,6 +522,21 @@ end (* end of [foreach_to_foldleft]: let *)
 (* ****** ****** *)
 
 fun
+foldleft_to_length
+( foldleft
+: ('xs * int * (int*'x0 -> int)) -> int)
+: ('xs -> int) =
+fn(xs: 'xs) => foldleft(xs, 0, fn(r0,x0) => r0+1)
+
+(* ****** ****** *)
+
+fun
+foreach_to_length(foreach) =
+foldleft_to_length(foreach_to_foldleft(foreach))
+
+(* ****** ****** *)
+
+fun
 int0_foreach
 (n0: int, work: unit -> unit) =
 let
@@ -486,7 +548,11 @@ fun
 end (* end of [int0_foreach(n0, work)]: let *)
 
 (* ****** ****** *)
-
+(*
+HX: this is the same as the following Python loop:
+for x in range(n0):
+  work(x)
+*)
 fun
 int1_foreach
 (n0: int, work: int -> unit) =
@@ -513,6 +579,52 @@ val
 int1_foldright =
 fn(xs,r0,fopr) =>
 int1_foldleft(xs, r0, fn(r0, x0) => fopr(xs-1-x0, r0))
+
+(* ****** ****** *)
+
+fun
+string_foreach
+(xs: string, work: char -> unit): unit =
+int1_foreach
+(String.size(xs), fn(i) => work(String.sub(xs, i)))
+
+(* ****** ****** *)
+
+fun
+list_labelize
+(xs: 'a list): (int * 'a) list =
+list_reverse
+(#2
+(
+list_foldl
+ (xs, (0, nil), fn((i, r), x) => (i+1, (i, x) :: r))
+)
+)
+
+(* ****** ****** *)
+
+fun
+list_zip
+(xs: 'a list, ys: 'b list): ('a * 'b) list =
+(
+case (xs, ys) of
+  (nil, _) => nil
+| (_, nil) => nil
+| (x1 :: xs, y1 :: ys) => (x1, y1) :: list_zip(xs, ys)
+)
+
+fun
+list_z2foreach
+( xs: 'a list
+, ys: 'b list
+, work: ('a * 'b) -> unit): unit =
+(
+case (xs, ys) of
+  (nil, _) => ()
+| (_, nil) => ()
+| (x1 :: xs, y1 :: ys) =>
+  (work(x1, y1); list_z2foreach(xs, ys, work))
+)
 
 (* ****** ****** *)
 
