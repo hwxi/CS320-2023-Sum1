@@ -322,4 +322,174 @@ list_append
 
 (* ****** ****** *)
 
+(*
+A Swiss army's knife for left-handed
+*)
+fun
+list_foldl
+( xs: 'a list
+, r0: 'r, fopr: 'r * 'a -> 'r): 'r =
+(
+case xs of
+  nil => r0
+| x1 :: xs => list_foldl(xs, fopr(r0, x1), fopr)
+)
+
+(* ****** ****** *)
+
+(*
+A Swiss army's knife for right-handed
+*)
+(*
+fun
+list_foldr
+( xs: 'a list
+, r0: 'r, fopr: 'a * 'r -> 'r): 'r =
+(
+case xs of
+  nil => r0
+| x1 :: xs => fopr(x1, list_foldr(xs, r0, fopr))
+)
+*)
+(*
+HX:
+This list_foldr implementation is tail-recursive!!!
+*)
+fun
+list_foldr
+( xs: 'a list
+, r0: 'r, fopr: 'a * 'r -> 'r): 'r =
+list_foldl
+(list_reverse(xs), r0, fn(r, x) => fopr(x, r))
+
+(* ****** ****** *)
+
+fun
+list_length
+(xs: 'a list): int =
+list_foldl(xs, 0, fn(r, x) => r + 1)
+
+(* ****** ****** *)
+(*
+fun
+list_extend
+(xs: 'a list, x0: 'a): 'a list =
+(
+case xs of
+  nil => [x0]
+| x1 :: xs => x1 :: list_extend(xs, x0)
+)
+*)
+fun
+list_extend
+(xs: 'a list, x0: 'a): 'a list =
+list_append(xs, [x0])
+
+fun
+list_append
+(xs: 'a list, ys: 'a list): 'a list =
+list_foldr(xs, ys, fn(x, r) => x :: r)
+
+fun
+list_rappend
+(xs: 'a list, ys: 'a list): 'a list =
+list_foldl(xs, ys, fn(r, x) => x :: r)
+
+(* ****** ****** *)
+
+fun
+list_map
+( xs: 'apple list
+, fopr: 'apple -> 'banana): 'banana list =
+list_foldr(xs, [], fn(x, r) => fopr(x) :: r)
+
+(* ****** ****** *)
+
+fun
+foreach_to_forall
+( foreach
+: ('xs * ('x0 -> unit)) -> unit
+)
+: ('xs * ('x0 -> bool)) -> bool =
+fn(xs: 'xs, test: 'x0 -> bool) =>
+let
+  exception False
+in(*let*)
+(* ****** ****** *)
+let
+val () =
+foreach
+(
+xs
+,
+fn(x0: 'x0) =>
+if
+test(x0) then () else raise False)
+in
+  ( true )
+end handle False(*void*) => (false)
+(* ****** ****** *)
+end (* end of [foreach_to_forall]: let *)
+
+(* ****** ****** *)
+
+fun
+foreach_to_foldleft
+( foreach
+: ('xs * ('x0 -> unit)) -> unit
+)
+: ('xs * 'r0 * ('r0*'x0 -> 'r0)) -> 'r0 =
+fn(xs, r0, fopr) =>
+let
+val res = ref(r0)
+in
+foreach
+( xs
+, fn(x0) => res := fopr(!res, x0)); !res
+end (* end of [foreach_to_foldleft]: let *)
+
+(* ****** ****** *)
+
+fun
+int0_foreach
+(n0: int, work: unit -> unit) =
+let
+fun
+  loop(i0: int): unit =
+  if i0 >= n0
+  then ()
+  else (work(); loop(i0+1)) in loop(0(*i0*))
+end (* end of [int0_foreach(n0, work)]: let *)
+
+(* ****** ****** *)
+
+fun
+int1_foreach
+(n0: int, work: int -> unit) =
+let
+fun
+loop(i0: int): unit =
+if i0 >= n0
+then ()
+else (work(i0); loop(i0+1)) in loop(0(*i0*))
+end (* end of [int1_foreach(n0, work)]: let *)
+
+(* ****** ****** *)
+
+val int1_forall = fn(xs, test) =>
+  foreach_to_forall(int1_foreach)(xs, test)
+
+(* ****** ****** *)
+
+val
+int1_foldleft =
+fn(xs,r0,fopr) =>
+foreach_to_foldleft(int1_foreach)(xs,r0,fopr)
+val
+int1_foldright =
+fn(xs,r0,fopr) =>
+int1_foldleft(xs, r0, fn(r0, x0) => fopr(xs-1-x0, r0))
+
+(* ****** ****** *)
+
 (* end of [BUCASCS320-2023-Sum1-mysmlib-cls.sml] *)
