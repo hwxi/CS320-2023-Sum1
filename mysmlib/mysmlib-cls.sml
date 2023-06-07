@@ -582,11 +582,33 @@ int1_foldleft(xs, r0, fn(r0, x0) => fopr(xs-1-x0, r0))
 
 (* ****** ****** *)
 
+val
+list_foldleft =
+fn(xs, r0, fopr) =>
+foreach_to_foldleft(list_foreach)(xs,r0,fopr)
+val
+list_foldright =
+fn(xs, r0, fopr) =>
+foreach_to_foldleft(list_foreach)(xs,r0,fopr)
+
+(* ****** ****** *)
+
 fun
 string_foreach
 (xs: string, work: char -> unit): unit =
 int1_foreach
 (String.size(xs), fn(i) => work(String.sub(xs, i)))
+
+(* ****** ****** *)
+
+val
+string_foldleft =
+fn(xs, r0, fopr) =>
+foreach_to_foldleft(string_foreach)(xs,r0,fopr)
+val
+string_foldright =
+fn(xs, r0, fopr) =>
+foreach_to_foldleft(string_foreach)(xs,r0,fopr)
 
 (* ****** ****** *)
 
