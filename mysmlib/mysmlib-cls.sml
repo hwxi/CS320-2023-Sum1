@@ -451,9 +451,18 @@ list_foldl(xs, ys, fn(r, x) => x :: r)
 
 fun
 list_map
-( xs: 'apple list
-, fopr: 'apple -> 'banana): 'banana list =
+( xs: 'a list
+, fopr: 'a -> 'b): 'b list =
 list_foldr(xs, [], fn(x, r) => fopr(x) :: r)
+
+(* ****** ****** *)
+
+fun
+list_filter
+(xs: 'a list, test: 'a -> bool): 'a list =
+list_foldr
+( xs, []
+, fn(x1, res) => if test(x1) then x1 :: res else res)
 
 (* ****** ****** *)
 
@@ -623,18 +632,21 @@ list_foldl
  (xs, (0, nil), fn((i, r), x) => (i+1, (i, x) :: r))
 )
 )
+val list_enumerate = list_labelize
 
 (* ****** ****** *)
 
 fun
-list_zip
+list_zip2
 (xs: 'a list, ys: 'b list): ('a * 'b) list =
 (
 case (xs, ys) of
   (nil, _) => nil
 | (_, nil) => nil
-| (x1 :: xs, y1 :: ys) => (x1, y1) :: list_zip(xs, ys)
+| (x1 :: xs, y1 :: ys) => (x1, y1) :: list_zip2(xs, ys)
 )
+
+(* ****** ****** *)
 
 fun
 list_z2foreach
@@ -648,6 +660,78 @@ case (xs, ys) of
 | (x1 :: xs, y1 :: ys) =>
   (work(x1, y1); list_z2foreach(xs, ys, work))
 )
+
+(* ****** ****** *)
+
+fun
+list_z2map
+( xs: 'a list
+, ys: 'b list
+, fopr: 'a * 'b -> 'c): 'c list =
+list_map(list_zip2(xs, ys), fopr)
+(*
+case (xs, ys) of
+  (nil, _) => nil
+| (_, nil) => nil
+| (x1 :: xs, y1 :: ys) => fopr(x1, y1) :: list_z2map(xs, ys, fopr)
+*)
+
+(* ****** ****** *)
+
+fun
+list_z2forall
+( xs: 'a list
+, ys: 'b list
+, test: 'a * 'b -> bool): bool =
+list_forall(list_zip2(xs, ys), test)
+
+(* ****** ****** *)
+
+fun
+list_concat
+(xss: 'a list list): 'a list =
+list_foldr
+(xss, [], fn(xs, res) => list_append(xs, res))
+(*
+case xss of
+  nil => nil
+| xs1 :: xss => list_append(xs1, list_concat(xss))
+*)
+
+(* ****** ****** *)
+
+fun
+list_cross2
+(xs: 'a list, ys: 'b list): ('a * 'b) list =
+list_concat
+(list_map(xs, fn x => list_map(ys, fn y => (x, y))))
+
+(* ****** ****** *)
+
+fun
+list_x2map
+( xs: 'a list
+, ys: 'b list
+, fopr: 'a * 'b -> 'c): 'c list =
+list_map(list_cross2(xs, ys), fopr)
+
+(* ****** ****** *)
+
+fun
+list_x2forall
+( xs: 'a list
+, ys: 'b list
+, test: 'a * 'b -> bool): bool =
+list_forall(list_cross2(xs, ys), test)
+
+(* ****** ****** *)
+
+fun
+list_x2exists
+( xs: 'a list
+, ys: 'b list
+, test: 'a * 'b -> bool): bool =
+list_exists(list_cross2(xs, ys), test)
 
 (* ****** ****** *)
 
