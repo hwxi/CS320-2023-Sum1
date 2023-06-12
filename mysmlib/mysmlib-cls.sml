@@ -590,7 +590,7 @@ val
 list_foldright =
 fn(xs, r0, fopr) =>
 list_foldleft
-(list_reverse(xs), r0, fn(r, x) = fopr(x, r))
+(list_reverse(xs), r0, fn(r, x) => fopr(x, r))
 
 (* ****** ****** *)
 
