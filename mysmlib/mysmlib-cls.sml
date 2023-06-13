@@ -513,6 +513,18 @@ foreach_to_forall(list_foreach)(xs, test)
 
 (* ****** ****** *)
 
+type
+('xs, 'x0) foreach_t =
+'xs * ('x0 -> unit) -> unit
+type
+('xs, 'x0) iforeach_t =
+'xs * (int * 'x0 -> unit) -> unit
+type
+('xs, 'x0, 'r0) ifoldleft_t =
+'xs * 'r0 * ('r0 * int * 'x0 -> 'r0) -> 'r0
+
+(* ****** ****** *)
+
 fun
 foreach_to_foldleft
 ( foreach
@@ -633,6 +645,18 @@ list_foldl
 )
 )
 val list_enumerate = list_labelize
+
+(* ****** ****** *)
+
+fun
+foreach_to_iforeach
+( foreach
+: ('xs, 'x0) foreach_t): ('xs, 'x0) iforeach_t =
+fn(xs, iwork) =>
+let
+val _ =
+foreach_to_foldleft(foreach)
+(xs, 0, fn(p, x) => (iwork(p, x); p+1)) in () end
 
 (* ****** ****** *)
 
