@@ -32,6 +32,18 @@ exception NotImplemented320
 
 (* ****** ****** *)
 
+type
+('xs, 'x0) foreach_t =
+'xs * ('x0 -> unit) -> unit
+type
+('xs, 'x0) iforeach_t =
+'xs * (int * 'x0 -> unit) -> unit
+type
+('xs, 'x0, 'r0) ifoldleft_t =
+'xs * 'r0 * ('r0 * int * 'x0 -> 'r0) -> 'r0
+
+(* ****** ****** *)
+
 fun
 assert320
 (claim: bool): unit =
@@ -346,17 +358,19 @@ case xs of
 
 (* ****** ****** *)
 
+(*
 fun
 list_foreach
 (xs: 'a list, work: 'a -> unit): unit =
 let
 val _ =
 list_forall
-(xs, fn(x1) => (work(x1); true)) in ()
-end
+(xs, fn(x1) => (work(x1); true)) in () end
+*)
 
 (* ****** ****** *)
 
+(*
 fun
 list_forall
 (xs: 'a list, test: 'a -> bool): bool =
@@ -371,6 +385,13 @@ list_foreach
  then () else raise False); true)
 handle False => false
 end (* end-of-let: list_forall(xs, test) *)
+*)
+
+(* ****** ****** *)
+
+fun
+list_foreach(xs, work) =
+forall_to_foreach(list_forall)(xs, work)
 
 (* ****** ****** *)
 
@@ -475,10 +496,6 @@ forall_to_foreach
 fn(xs, work) =>
 (forall(xs, fn(x0) => (work(x0); true)); ())
 
-fun
-list_foreach(xs, work) =
-forall_to_foreach(list_forall)(xs, work)
-
 (* ****** ****** *)
 
 fun
@@ -506,22 +523,6 @@ in
 end handle False(*void*) => (false)
 (* ****** ****** *)
 end (* end of [foreach_to_forall]: let *)
-
-fun
-list_forall(xs, test) =
-foreach_to_forall(list_foreach)(xs, test)
-
-(* ****** ****** *)
-
-type
-('xs, 'x0) foreach_t =
-'xs * ('x0 -> unit) -> unit
-type
-('xs, 'x0) iforeach_t =
-'xs * (int * 'x0 -> unit) -> unit
-type
-('xs, 'x0, 'r0) ifoldleft_t =
-'xs * 'r0 * ('r0 * int * 'x0 -> 'r0) -> 'r0
 
 (* ****** ****** *)
 
@@ -554,6 +555,90 @@ fn(xs: 'xs) => foldleft(xs, 0, fn(r0,x0) => r0+1)
 fun
 foreach_to_length(foreach) =
 foldleft_to_length(foreach_to_foldleft(foreach))
+
+(* ****** ****** *)
+
+fun
+foreach_to_get_at
+(
+foreach:
+('xs*('x0->unit))->unit): 'xs*int -> 'x0 =
+fn(xs, i0) =>
+let
+exception Found of ('x0)
+val foldleft = foreach_to_foldleft(foreach)
+in (*let*)
+(* ****** ****** *)
+let
+val r0 =
+foldleft
+( xs, 0
+, fn(r0, x0) =>
+  if i0 = r0 then
+  raise Found(x0) else r0+1) in raise Subscript
+end handle Found(x0) => x0
+(* ****** ****** *)
+end (* end-of-[foreach_to_get_at]: let *) 
+
+(* ****** ****** *)
+
+fun
+foreach_to_listize
+(
+foreach:
+('xs*('x0->unit))->unit): 'xs -> 'x0 list =
+(
+fn(xs) =>
+list_reverse
+(
+foreach_to_foldleft
+(foreach)(xs, nil, fn(r0, x0) => x0 :: r0)))
+
+(* ****** ****** *)
+
+fun
+foreach_to_rlistize
+(
+foreach:
+('xs*('x0->unit))->unit): 'xs -> 'x0 list =
+fn(xs) =>
+(foreach_to_foldleft
+ (foreach)(xs, nil, fn(r0, x0) => x0 :: r0))
+
+(* ****** ****** *)
+
+fun
+foreach_to_map_list
+(
+foreach:
+('xs * ('x0->unit))->unit)
+:
+('xs * ('x0 -> 'y0)) -> 'y0 list
+=
+(
+fn(xs, fopr) =>
+list_reverse
+(
+foreach_to_foldleft
+(foreach)(xs, nil, fn(r0, x0) => fopr(x0) :: r0)))
+
+(* ****** ****** *)
+
+fun
+foreach_to_filter_list
+(
+foreach:
+('xs * ('x0->unit))->unit)
+:
+('xs * ('x0 -> bool)) -> 'x0 list
+=
+(
+fn(xs, test) =>
+list_reverse
+(
+foreach_to_foldleft(foreach)
+( xs, nil
+, fn(r0, x0) => if test(x0) then x0 :: r0 else r0)))
 
 (* ****** ****** *)
 
@@ -600,6 +685,12 @@ val
 int1_foldright =
 fn(xs,r0,fopr) =>
 int1_foldleft(xs, r0, fn(r0, x0) => fopr(xs-1-x0, r0))
+
+(* ****** ****** *)
+
+fun
+list_forall(xs, test) =
+foreach_to_forall(list_foreach)(xs, test)
 
 (* ****** ****** *)
 
