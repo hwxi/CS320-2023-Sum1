@@ -358,15 +358,14 @@ case xs of
 
 (* ****** ****** *)
 
-(*
 fun
 list_foreach
 (xs: 'a list, work: 'a -> unit): unit =
-let
-val _ =
-list_forall
-(xs, fn(x1) => (work(x1); true)) in () end
-*)
+(
+case xs of
+  nil => ()
+| (x1::xs) => (work(x1); list_foreach(xs, work))
+)
 
 (* ****** ****** *)
 
@@ -386,12 +385,6 @@ list_foreach
 handle False => false
 end (* end-of-let: list_forall(xs, test) *)
 *)
-
-(* ****** ****** *)
-
-fun
-list_foreach(xs, work) =
-forall_to_foreach(list_forall)(xs, work)
 
 (* ****** ****** *)
 
