@@ -682,6 +682,17 @@ int1_foldleft(xs, r0, fn(r0, x0) => fopr(xs-1-x0, r0))
 (* ****** ****** *)
 
 fun
+list_tabulate
+( n0: int
+, fopr: int -> 'a): 'a list =
+list_reverse
+(
+int1_foldleft
+(n0, [], fn(xs, i) => fopr(i) :: xs))
+
+(* ****** ****** *)
+
+fun
 list_forall(xs, test) =
 foreach_to_forall(list_foreach)(xs, test)
 
