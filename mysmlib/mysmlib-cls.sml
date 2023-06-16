@@ -854,4 +854,342 @@ list_exists(list_cross2(xs, ys), test)
 
 (* ****** ****** *)
 
+datatype 'a strcon =
+  strcon_nil
+| strcon_cons of
+  ('a * (unit -> 'a strcon))
+
+(* ****** ****** *)
+
+type 'a stream = (unit -> 'a strcon)
+
+(* ****** ****** *)
+
+fun
+strcon_head
+(cxs: 'a strcon) =
+case cxs of
+strcon_nil => raise Empty
+|
+strcon_cons(cx1, fxs) => cx1
+
+fun
+strcon_tail
+(cxs: 'a strcon) =
+case cxs of
+strcon_nil => raise Empty
+|
+strcon_cons(cx1, fxs) => fxs
+
+(* ****** ****** *)
+
+fun
+stream_nil
+((*void*)) =
+  fn () => strcon_nil(*void*)
+fun
+stream_cons
+( x1: 'a
+, fxs
+: 'a stream) =
+   fn () => strcon_cons(x1, fxs)
+
+(* ****** ****** *)
+
+fun
+stream_head
+( fxs
+: 'a stream) = strcon_head(fxs())
+fun
+stream_tail
+( fxs
+: 'a stream) = strcon_tail(fxs())
+
+(* ****** ****** *)
+
+fun
+int1_streamize(n) = fn () =>
+let
+fun
+helper(i): int strcon =
+if
+(i >= n)
+then
+strcon_nil(*void*)
+else
+strcon_cons
+(i, fn () => helper(i+1)) in helper(0)
+end
+
+(* ****** ****** *)
+
+fun
+list_streamize(xs) = fn () =>
+(
+case xs of
+  nil =>
+  strcon_nil
+| x1 :: xs =>
+  strcon_cons(x1, list_streamize(xs))
+)
+
+(* ****** ****** *)
+
+fun
+stream_tabulate
+( n0: int
+, fopr: int -> 'a): 'a stream =
+let
+fun
+fmain1
+(i0: int): 'a stream = fn() =>
+strcon_cons(fopr(i0), fmain1(i0+1))
+fun
+fmain2
+(i0: int): 'a stream = fn() =>
+if
+i0 >= n0
+then strcon_nil else
+strcon_cons(fopr(i0), fmain2(i0+1))
+in
+if n0 < 0 then fmain1(0) else fmain2(0)
+end (* end-of-[stream_tabulate(n0, fopr)] *)
+
+(* ****** ****** *)
+
+val
+string_streamize =
+fn(cs) =>
+stream_tabulate
+(String.size(cs), fn i => String.sub(cs, i))
+
+(* ****** ****** *)
+
+val
+array_streamize =
+fn(arr) =>
+stream_tabulate
+(Array.length(arr), fn i => Array.sub(arr, i))
+val
+vector_streamize =
+fn(vec) =>
+stream_tabulate
+(Vector.length(vec), fn i => Vector.sub(vec, i))
+
+(* ****** ****** *)
+
+fun
+stream_forall
+(fxs, test) =
+let
+fun
+auxmain(fxs): bool =
+(
+case fxs() of
+  strcon_nil => true
+| strcon_cons(x1, fxs) =>
+  (test(x1) andalso auxmain(fxs))
+)
+in
+  auxmain(fxs)
+end (* end-of-[stream_forall(fxs, test)] *)
+
+fun
+stream_iforall
+(fxs, itest) =
+let
+fun
+auxmain(i0, fxs): bool =
+(
+case fxs() of
+  strcon_nil => true
+| strcon_cons(x1, fxs) =>
+  (itest(i0, x1) andalso auxmain(i0+1, fxs))
+)
+in
+  auxmain(0, fxs)
+end (* end-of-[stream_iforall(fxs, itest)] *)
+
+(* ****** ****** *)
+
+fun
+stream_foreach
+(fxs, work) =
+let
+fun
+auxmain(fxs): unit =
+(
+case fxs() of
+  strcon_nil => ()
+| strcon_cons(x1, fxs) =>
+  (work(x1); auxmain(fxs))
+)
+in
+  auxmain(fxs)
+end (* end-of-[stream_foreach(fxs, work)] *)
+
+(* ****** ****** *)
+
+fun
+stream_get_at
+( fxs
+: 'a stream, i0: int): 'a =
+(
+foreach_to_get_at(stream_foreach)(fxs, i0))
+
+(* ****** ****** *)
+
+fun
+stream_iforeach
+(fxs, iwork) =
+let
+fun
+auxmain(i0, fxs): unit =
+(
+case fxs() of
+  strcon_nil => ()
+| strcon_cons(x1, fxs) =>
+  (iwork(i0, x1); auxmain(i0+1, fxs))
+)
+in
+  auxmain(0, fxs)
+end (* end-of-[stream_iforeach(fxs, iwork)] *)
+
+(* ****** ****** *)
+val
+stream_length = fn(fxs) =>
+foreach_to_length(stream_foreach)(fxs)
+(* ****** ****** *)
+
+fun
+stream_append
+( fxs: 'a stream
+, fys: 'a stream) = fn() =>
+(
+case fxs() of
+strcon_nil => fys()
+|
+strcon_cons(x1, fxs) =>
+strcon_cons(x1, stream_append(fxs, fys)))
+
+(* ****** ****** *)
+
+fun
+stream_concat
+( fxss: 'a stream stream) = fn() =>
+(
+case fxss() of
+strcon_nil => strcon_nil
+|
+strcon_cons(fxs1, fxss) =>
+stream_append(fxs1, stream_concat(fxss))())
+
+(* ****** ****** *)
+
+fun
+stream_make_map(fxs, fopr) = fn () =>
+(
+case fxs() of
+strcon_nil =>
+strcon_nil
+|
+strcon_cons(x1, fxs) =>
+strcon_cons
+  (fopr(x1), stream_make_map(fxs, fopr))
+)
+
+(* ****** ****** *)
+
+fun
+stream_make_filter
+( fxs: 'a stream
+, test: 'a -> bool): 'a stream = fn () =>
+(
+case fxs() of
+  strcon_nil =>
+  strcon_nil
+| strcon_cons(x1, fxs) =>
+  if
+  not(test(x1))
+  then stream_make_filter(fxs, test)()
+  else
+  strcon_cons(x1, stream_make_filter(fxs, test))
+)
+
+(* ****** ****** *)
+
+fun
+stream_make_imap
+( fxs: 'a stream
+, ifopr
+: int * 'a -> 'b) =
+let
+(* ****** ****** *)
+fun
+helper(fxs, i0: int) = fn() =>
+case fxs() of
+strcon_nil =>
+strcon_nil(*void*)
+|
+strcon_cons(x1, fxs) =>
+strcon_cons
+( ifopr(i0, x1)
+, helper(fxs, i0+1)) in helper(fxs, 0)
+(* ****** ****** *)
+end (* end-of-[stream_make_imap(fxs, ifopr)] *)
+
+(* ****** ****** *)
+
+fun
+stream_make_ifilter
+( fxs: 'a stream
+, itest: int * 'a -> bool): 'a stream =
+let
+(* ****** ****** *)
+fun
+helper
+(fxs, i0: int) = fn() =>
+case fxs() of
+strcon_nil => strcon_nil
+|
+strcon_cons(x1, fxs) =>
+if
+not(itest(i0, x1))
+then helper(fxs, i0+1)()
+else
+strcon_cons
+  (x1, helper(fxs, i0+1)) in helper(fxs, 0)
+(* ****** ****** *)
+end (* end-of-[stream_make_ifilter(fxs, ifopr)] *)
+
+(* ****** ****** *)
+(*
+HX-2023-04-04:
+For merging two ordered streams
+*)
+fun
+stream_merge2
+( fxs1: 'a stream
+, fxs2: 'a stream
+, lte3: 'a * 'a -> bool): 'a stream = fn() =>
+(
+case fxs1() of
+  strcon_nil => fxs2()
+| strcon_cons(x1, fxs1) =>
+(
+case fxs2() of
+strcon_nil =>
+strcon_cons(x1, fxs1)
+|
+strcon_cons(x2, fxs2) =>
+if
+lte3(x1, x2)
+then strcon_cons
+(x1, stream_merge2(fxs1, stream_cons(x2, fxs2), lte3))
+else strcon_cons
+(x2, stream_merge2(stream_cons(x1, fxs1), fxs2, lte3))
+)
+)
+(* ****** ****** *)
+
 (* end of [BUCASCS320-2023-Sum1-mysmlib-cls.sml] *)
