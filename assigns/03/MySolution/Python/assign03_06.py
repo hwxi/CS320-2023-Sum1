@@ -6,8 +6,12 @@ sys.path.append('./../../../../mypylib')
 from mypylib_cls import *
 ####################################################
 """
+//
 HX-2023-06-12: 20 points
 Solving the N-queen puzzle
+Here is an implementation of the famous 8-queen puzzle:
+https://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/HTML/x631.html
+//
 """
 ####################################################
 def solve_N_queen_puzzle(N):
