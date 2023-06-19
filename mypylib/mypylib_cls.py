@@ -239,7 +239,7 @@ def pylist_imaximum(xs):
 
 ###########################################################################
 
-def string_implode(xs):
+def string_make_fnlist(xs):
     return ''.join(fnlist_pylistize(xs))
 
 ###########################################################################
