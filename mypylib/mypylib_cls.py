@@ -239,6 +239,11 @@ def pylist_imaximum(xs):
 
 ###########################################################################
 
+def string_implode(xs):
+    return ''.join(fnlist_pylistize(xs))
+
+###########################################################################
+
 def string_foreach(xs, work_func):
     for x0 in xs:
         work_func(x0)
@@ -253,6 +258,9 @@ def string_foldleft(xs, r0, fopr_func):
 def string_foldright(xs, r0, fopr_func):
     return rforeach_to_foldright(string_rforeach)(xs, r0, fopr_func)
 
+def string_fnlistize(xs):
+    return fnlist_make_pylist\
+        (foreach_to_pylistize(string_foreach)(xs))
 def string_pylistize(xs):
     return foreach_to_pylistize(string_foreach)(xs)
 def string_rpylistize(xs):
