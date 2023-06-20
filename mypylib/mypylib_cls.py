@@ -239,6 +239,8 @@ def pylist_imaximum(xs):
 
 ###########################################################################
 
+def string_make_pylist(xs):
+    return ''.join(xs)
 def string_make_fnlist(xs):
     return ''.join(fnlist_pylistize(xs))
 
