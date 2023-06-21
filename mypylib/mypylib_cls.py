@@ -150,9 +150,11 @@ def fnlist_pylistize(xs):
 def fnlist_rpylistize(xs):
     return foreach_to_rpylistize(fnlist_foreach)(xs)
 ####################################################
-
+def fnlist_make_map(xs, fopr_func):
+    return foreach_to_map_fnlist(fnlist_foreach)(xs, fopr_func)
+####################################################
 def fnlist_make_pylist(xs): return pylist_fnlistize(xs)
-
+####################################################
 def fnlist_filter_pylist(xs, test_func):
     return foreach_to_filter_pylist(fnlist_foreach)(xs, test_func)
 
