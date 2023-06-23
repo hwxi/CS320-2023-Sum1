@@ -20,28 +20,15 @@ The general form of the enumerated sums is given as follows
 
 (* ****** ****** *)
 
+(*
 fun
 stream_evaluate
 ( fxs
 : real
   stream
-, x0: real): real stream =
-let
-  fun
-  helper
-  (fxs, sum, xn) = fn() =>
-  let
-    val
-    strcon_cons
-    (an, fxs) = fxs()
-    val sum = sum + an * xn
-  in
-    strcon_cons(sum, helper(fxs, sum, x0 * xn))
-  end
-in
-  helper(fxs, 0.0, 1.0)
-end (* end of [stream_evaluate: let] *)
+, x0: real): real stream = ...
+*)
 
 (* ****** ****** *)
 
-(* end of [CS320-2023-Spring-midterm2-stream_evaluate.sml] *)
+(* end of [CS320-2023-Sum1-midterm2-stream_evaluate.sml] *)
