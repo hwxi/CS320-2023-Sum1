@@ -1,5 +1,10 @@
 (* ****** ****** *)
 
+use
+"./../../../mysmlib/mysmlib-cls.sml";
+
+(* ****** ****** *)
+
 (*
 //
 // HX-2023-04-20: 20 points
@@ -17,9 +22,11 @@ For instance, [1,2,3,4] does not capture '231'
 
 (* ****** ****** *)
 
+(*
 fun
 perm_capture_231
 (xs: int list): bool = ...
+*)
 
 (* ****** ****** *)
 

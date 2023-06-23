@@ -1,7 +1,7 @@
 (* ****** ****** *)
 
 use
-"./../../mysmlib/mysmlib-cls.sml";
+"./../../../mysmlib/mysmlib-cls.sml";
 
 (* ****** ****** *)
 
@@ -21,9 +21,11 @@ use
 
 (* ****** ****** *)
 
+(*
 fun
 stream_drawdowns
 (fxs: int stream): int list stream = ...
+*)
   
 (* ****** ****** *)
 

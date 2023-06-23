@@ -1,6 +1,7 @@
 (* ****** ****** *)
 
-use "./../../mysmlib/mysmlib-cls.sml";
+use
+"./../../../mysmlib/mysmlib-cls.sml";
 
 (* ****** ****** *)
 
@@ -18,4 +19,4 @@ stream_drop(fxs, n) = ...
 
 (* ****** ****** *)
 
-(* end of [CS320-2023-Spring-stream_takedrop.sml] *)
+(* end of [CS320-2023-Sum1-stream_takedrop.sml] *)
