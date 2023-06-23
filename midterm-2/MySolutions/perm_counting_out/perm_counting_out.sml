@@ -1,7 +1,7 @@
 (* ****** ****** *)
 
 use
-"./../../mysmlib/mysmlib-cls.sml";
+"./../../../mysmlib/mysmlib-cls.sml";
 
 (* ****** ****** *)
 
