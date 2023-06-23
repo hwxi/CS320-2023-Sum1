@@ -1,13 +1,6 @@
 (* ****** ****** *)
 
-use "./../../mysmlib/mysmlib-cls.sml";
-
-(* ****** ****** *)
-
-use "./midterm2-06.sml";
-(*
 use "./perm_counting_out.sml";
-*)
 
 (* ****** ****** *)
 
@@ -36,7 +29,7 @@ val () = assert320(perm_counting_out([], 100) = [])
 val () = assert320(perm_counting_out([1], 100) = [1])
 
 (* ****** ****** *)
-val (  ) = print("midterm2-06-test: passed!\n")
+val (  ) = print("perm_counting_out_test: passed!\n")
 (* ****** ****** *)
 
-(* end of [CS320-2023-Spring-midterm2-06-test.sml] *)
+(* end of [CS320-2023-Sum1-midterm2-06-test.sml] *)

@@ -1,13 +1,6 @@
 (* ****** ****** *)
 
-use "./../../mysmlib/mysmlib-cls.sml";
-
-(* ****** ****** *)
-
-use "./midterm2-05.sml";
-(*
 use "./perm_capture_231.sml";
-*)
 
 (* ****** ****** *)
 
@@ -74,7 +67,7 @@ stream_length
 )
 
 (* ****** ****** *)
-val (  ) = print("midterm2-05-test: passed!\n")
+val (  ) = print("perm_capture_231_test: passed!\n")
 (* ****** ****** *)
 
-(* end of [CS320-2023-Spring-midterm2-05-test.sml] *)
+(* end of [CS320-2023-Sum1-midterm2-05-test.sml] *)
