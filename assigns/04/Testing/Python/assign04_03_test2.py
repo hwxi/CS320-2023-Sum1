@@ -10,7 +10,7 @@ sys.path.append('./../../../../mypylib')
 from mypylib_cls import *
 ####################################################
 sys.path.append('./../../MySolution/Python')
-from assign08_02 import *
+from assign04_03 import *
 ######################################################
 xs1 = generator_tabulate(2, lambda i: i)
 xs2 = generator_tabulate(3, lambda i: i + 2)
@@ -26,5 +26,5 @@ try:
 except StopIteration:
     assert True
 ######################################################
-print("Assign08-02-test2 passed!")
+print("Assign04-03-test2 passed!")
 ####################################################

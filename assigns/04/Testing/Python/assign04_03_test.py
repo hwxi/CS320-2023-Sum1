@@ -10,7 +10,7 @@ sys.path.append('./../../../../mypylib')
 from mypylib_cls import *
 ####################################################
 sys.path.append('./../../MySolution/Python')
-from assign08_02 import *
+from assign04_03 import *
 ######################################################
 def cube_sum(ij):
     i = ij[0]
