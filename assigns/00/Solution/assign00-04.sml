@@ -21,4 +21,4 @@ val myans2 = str2int("98765")
 
 (* ****** ****** *)
 
-(* end of [CS320-2023-Spring-assign00-04.sml] *)
+(* end of [CS320-2023-Sum1-assign00-04.sml] *)

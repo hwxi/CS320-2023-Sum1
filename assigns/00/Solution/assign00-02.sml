@@ -37,4 +37,4 @@ val myans2 = isPrime(727)
 
 (* ****** ****** *)
 
-(* end of [CS320-2023-Spring-assign00-02.sml] *)
+(* end of [CS320-2023-Sum1-assign00-02.sml] *)

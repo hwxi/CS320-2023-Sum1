@@ -41,4 +41,4 @@ val myans2 = int2str(12345)
 
 (* ****** ****** *)
 
-(* end of [CS320-2023-Spring-assign00-03.sml] *)
+(* end of [CS320-2023-Sum1-assign00-03.sml] *)
